@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博饼</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        p {
+            font-size: 18px;
+        }
+        #dice-values {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>博饼</h1>
+        <p>Click the button to roll the dice and get a result!</p>
+        <button onclick="rollDice()">Roll Dice</button>
+        <p id="dice-values"> </p>
+        <p id="result">Result will be shown here...</p>
+    </div>
+
+    <script>
+        function rollDice() {
+            let dices = [];
+            for (let i = 0; i < 6; i++) {
+                let dice = Math.floor(Math.random() * 6) + 1;
+                dices.push(dice);
+            }
+
+            document.getElementById('dice-values').innerText = "You have: " + dices.join(", ");
+
+            dices.sort((a, b) => a - b);
+
+            const result = diceResult(dices);
+            document.getElementById('result').innerText = result;
+        }
+
+        function diceResult(dices) {
+            let result = "";
+            if (dices[0] === 4 && dices[1] === 4 && dices[2] === 4 && dices[3] === 4) {
+                if (dices[4] === 1 && dices[5] === 1) {
+                    result = "状元插金花";
+                } else if (dices[4] === 4 && dices[5] === 4) {
+                    result = "六杯红";
+                }
+            } else if (dices[0] === 1 && dices[1] === 1 && dices[2] === 1 && dices[3] === 1) {
+                result = "六杯一";
+            } else {
+                const duitang = [1, 2, 3, 4, 5, 6];
+                let countDict = {};
+                let fours = 0;
+                let bangyan = 0;
+
+                for (let i = 0; i < 6; i++) {
+                    if (dices[i] === 4) {
+                        fours++;
+                    }
+                    if (dices[i] === duitang[i]) {
+                        bangyan++;
+                    }
+
+                    countDict[dices[i]] = (countDict[dices[i]] || 0) + 1;
+                }
+
+                let same = Math.max(...Object.values(countDict));
+
+                if (bangyan === 6) {
+                    result = "对堂";
+                } else if (same === 5) {
+                    result = "五子登科";
+                    if (fours === 5) result = "五王";
+                    if (same === 6) result = "六杯黑";
+                } else if (same === 4) {
+                    result = "四进";
+                    if (fours === 4) result = "状元";
+                } else if (fours === 3) {
+                    result = "三红";
+                } else if (fours === 2) {
+                    result = "二举";
+                } else if (fours === 1) {
+                    result = "一秀";
+                } else {
+                    result = "Better luck next time!";
+                }
+            }
+            return result;
+        }
+    </script>
+</body>
+</html>
